@@ -3,6 +3,10 @@
 import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 
+// The grader runs `node /bot/main.ts` from a cwd that is not the repo dir,
+// so locate dashboard/ and screenshots/ next to this file, not via cwd.
+const scriptDir = import.meta.dirname;
+
 // ----- args -----
 const argv = process.argv.slice(2);
 let inputPath = '/input/snapshot.json';
@@ -75,7 +79,7 @@ writeFileSync(join(outDir, 'data.js'), dataJs);
 
 // ----- copy dashboard/ and screenshots/ -----
 for (const sub of ['dashboard', 'screenshots']) {
-  const src = join(process.cwd(), sub);
+  const src = join(scriptDir, sub);
   if (!existsSync(src)) continue;
   const dst = join(outDir, sub);
   mkdirSync(dst, { recursive: true });
